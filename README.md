@@ -17,4 +17,8 @@ service, and then verify them - all from within the test suite.
 docker-compose up
 ```
 
+![Illustration of system under test](img/sut.png)
+
+![Illustration of integration testing steps](img/testOrder.png)
+
 ## Thanks to the team for all the help, inspiration and motivation to keep work meaningful during these crazy times.

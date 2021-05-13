@@ -4,6 +4,8 @@ const axios = require("axios");
 const extSvcHost = process.env.EXTERNAL_SERVICE_HOST;
 const extSvcPort = process.env.EXTERNAL_SERVICE_PORT;
 
+// Worker takes messages (jobs) from a queue and sends them to an external
+// service for processing.
 const workerFunc = (job, done) => {
     console.log("received payload from queue: ", job.data);
     setTimeout(() => {

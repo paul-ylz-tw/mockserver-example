@@ -37,10 +37,8 @@ describe("creating a job", () => {
     })
 
     it("makes a request to the external service", async () => {
-        const sleep = (ms) => new Promise((resolve) => {
-            setTimeout(() => resolve(), ms);
-        });
 
+        // make a request to the system under test
         const res = await axios.post(`http://${sutHost}:${sutPort}/messages`, {
             fact: "hippos are herbivores"
         })
@@ -50,8 +48,11 @@ describe("creating a job", () => {
         expect(res.data.message).
             toEqual("Job added to queue");
 
+        // give a few moments for the worker to receive the job and call
+        // the external service
         await sleep(3000);
 
+        // verify that the external service was called as expected
         await mockServer.verify({
             body: {
                 fact: "hippos are herbivores"
@@ -62,4 +63,6 @@ describe("creating a job", () => {
     });
 });
 
-
+const sleep = (ms) => new Promise((resolve) => {
+    setTimeout(() => resolve(), ms);
+});

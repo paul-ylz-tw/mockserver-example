@@ -8,6 +8,7 @@ const queue = new Bull("messageQueue",
 
 app.use(express.json())
 
+// Server receives messages and puts them on a queue.
 app.post('/messages', (req, res) => {
     console.log(req.method, req.path, Date.now())
 
