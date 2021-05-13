@@ -1,0 +1,47 @@
+version: "3.7"
+
+x-build: &build
+  image: "node:12"
+  user: "node"
+  working_dir: /home/node/app
+  volumes:
+    - ./:/home/node/app
+  depends_on:
+    - redis
+
+services:
+  server:
+    <<: *build
+    expose:
+      - "3000"
+    command: "npm run server"
+    environment:
+      REDIS_HOST: redis
+
+  worker:
+    <<: *build
+    command: "npm run worker"
+    environment:
+      REDIS_HOST: redis
+      EXTERNAL_SERVICE_HOST: external_service
+      EXTERNAL_SERVICE_PORT: 1080
+
+  redis:
+    image: "redis:6.2.3"
+
+  external_service:
+    image: mockserver/mockserver
+
+  integration_test:
+    <<: *build
+    command: "npm run test"
+    environment:
+      EXTERNAL_SERVICE_HOST: external_service
+      EXTERNAL_SERVICE_PORT: 1080
+      SERVER_HOST: server
+      SERVER_PORT: 3000
+    depends_on:
+      - server
+      - worker
+
+
